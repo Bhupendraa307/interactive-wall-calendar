@@ -11,6 +11,8 @@ import { EVENT_COLORS } from '../hooks/useEvents'
 export default function DayCell({
   day, month,
   isToday, isStart, isEnd, isInRange, isWeekend, isSunday,
+  isTopRow,
+  columnIndex = 3,
   isFocused,
   hasNote, eventColors,
   onClick, onDoubleClick,
@@ -150,15 +152,39 @@ export default function DayCell({
         <>
           <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-amber-400" />
           {/* Tooltip */}
-          <div className="absolute -top-10 left-1/2 -translate-x-1/2 z-50 pointer-events-none
-                          opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-            <div className="bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900
-                            text-xs px-2.5 py-1 rounded-lg whitespace-nowrap shadow-xl font-body">
-              Holiday: {holiday}
-            </div>
-            <div className="absolute top-full left-1/2 -translate-x-1/2
-                            border-4 border-transparent border-t-stone-900 dark:border-t-stone-100" />
-          </div>
+          {(() => {
+            const isRightEdge = columnIndex >= 5
+            const isLeftEdge = columnIndex <= 1
+            const horizontalClass = isRightEdge
+              ? 'right-0'
+              : isLeftEdge
+                ? 'left-0'
+                : 'left-1/2 -translate-x-1/2'
+            const arrowClass = isRightEdge
+              ? 'right-4'
+              : isLeftEdge
+                ? 'left-4'
+                : 'left-1/2 -translate-x-1/2'
+
+            return (
+              <div
+                className={[
+                  'absolute z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150',
+                  horizontalClass,
+                  isTopRow ? 'top-full mt-1.5' : '-top-10',
+                ].join(' ')}
+              >
+                <div className="bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 text-xs px-2.5 py-1 rounded-lg whitespace-nowrap shadow-xl font-body">
+                  Holiday: {holiday}
+                </div>
+                {isTopRow ? (
+                  <div className={`absolute bottom-full ${arrowClass} border-4 border-transparent border-b-stone-900 dark:border-b-stone-100`} />
+                ) : (
+                  <div className={`absolute top-full ${arrowClass} border-4 border-transparent border-t-stone-900 dark:border-t-stone-100`} />
+                )}
+              </div>
+            )
+          })()}
         </>
       )}
     </motion.div>

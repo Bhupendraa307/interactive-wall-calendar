@@ -39,7 +39,7 @@ export default function CalendarGrid({
 
   return (
     <div
-      className="overflow-hidden select-none min-w-0"
+      className="overflow-x-hidden overflow-y-visible select-none min-w-0"
       onMouseLeave={() => {
         setHoverDate(null)
         handleDragEnd()
@@ -89,6 +89,8 @@ export default function CalendarGrid({
                 key={day ? `day-${day}` : `empty-${idx}`}
                 day={day}
                 month={currentMonth}
+                isTopRow={idx < 7}
+                columnIndex={idx % 7}
                 {...status}
                 isFocused={day && selectedDate === day}
                 hasNote={noteExists}
